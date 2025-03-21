@@ -41,8 +41,11 @@ anyhow = "1.0"
 config = "0.13.3"
 
 # Swagger/OpenAPI
-utoipa = { version = "4.1.0", features = ["actix_extras", "chrono", "uuid"] }
-utoipa-swagger-ui = { version = "5.0.0", features = ["actix-web"] }
+utoipa = { version = "4.0.0", features = ["actix_extras", "chrono", "uuid"] }
+utoipa-swagger-ui = { version = "4.0.0", features = ["actix-web"] }
+
+# Pin zerofrom to a version compatible with Rust 1.75.0
+zerofrom = "=0.1.5"
 
 [dev-dependencies]
 # Testing
