@@ -3,8 +3,26 @@ use crate::services::WorkoutService;
 use actix_web::{web, HttpResponse, Responder, get, post, delete};
 use uuid::Uuid;
 use validator::Validate;
+use utoipa::OpenApi;
 
 /// Create a new workout
+///
+/// Create a new workout for the authenticated user
+#[utoipa::path(
+    post,
+    path = "/workouts",
+    request_body = CreateWorkoutRequest,
+    responses(
+        (status = 201, description = "Workout created successfully", body = CreateWorkoutResponse),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "workouts",
+    security(
+        ("jwt_auth" = [])
+    )
+)]
 #[post("")]
 pub async fn create_workout(
     workout_service: web::Data<WorkoutService>,
@@ -31,6 +49,25 @@ pub async fn create_workout(
 }
 
 /// Get workout details
+///
+/// Get details of a specific workout
+#[utoipa::path(
+    get,
+    path = "/workouts/{workout_id}",
+    params(
+        ("workout_id" = Uuid, Path, description = "Workout ID")
+    ),
+    responses(
+        (status = 200, description = "Workout details retrieved successfully", body = WorkoutDetailsResponse),
+        (status = 401, description = "Unauthorized"),
+        (status = 404, description = "Workout not found"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "workouts",
+    security(
+        ("jwt_auth" = [])
+    )
+)]
 #[get("/{workout_id}")]
 pub async fn get_workout(
     workout_service: web::Data<WorkoutService>,
@@ -56,7 +93,22 @@ pub async fn get_workout(
     }
 }
 
-/// Get all workouts for a user
+/// Get all workouts
+///
+/// Get all workouts for the authenticated user
+#[utoipa::path(
+    get,
+    path = "/workouts",
+    responses(
+        (status = 200, description = "Workouts retrieved successfully", body = [Workout]),
+        (status = 401, description = "Unauthorized"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "workouts",
+    security(
+        ("jwt_auth" = [])
+    )
+)]
 #[get("")]
 pub async fn get_workouts(
     workout_service: web::Data<WorkoutService>,
@@ -73,6 +125,25 @@ pub async fn get_workouts(
 }
 
 /// Delete a workout
+///
+/// Delete a specific workout
+#[utoipa::path(
+    delete,
+    path = "/workouts/{workout_id}",
+    params(
+        ("workout_id" = Uuid, Path, description = "Workout ID")
+    ),
+    responses(
+        (status = 204, description = "Workout deleted successfully"),
+        (status = 401, description = "Unauthorized"),
+        (status = 404, description = "Workout not found"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "workouts",
+    security(
+        ("jwt_auth" = [])
+    )
+)]
 #[delete("/{workout_id}")]
 pub async fn delete_workout(
     workout_service: web::Data<WorkoutService>,
@@ -96,4 +167,10 @@ pub async fn delete_workout(
             }))
         }
     }
+}
+
+// Define a type for create workout response for Swagger documentation
+#[derive(serde::Serialize, utoipa::ToSchema)]
+pub struct CreateWorkoutResponse {
+    id: Uuid,
 }

@@ -2,6 +2,7 @@ pub mod auth;
 pub mod middleware;
 pub mod user;
 pub mod workout;
+pub mod docs;
 
 use actix_web::web;
 

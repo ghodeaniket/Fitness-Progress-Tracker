@@ -1,8 +1,25 @@
 use crate::services::UserService;
 use actix_web::{web, HttpResponse, Responder, get};
 use uuid::Uuid;
+use utoipa::OpenApi;
 
 /// Get the current user's profile
+///
+/// Retrieve the profile information for the authenticated user
+#[utoipa::path(
+    get,
+    path = "/users/profile",
+    responses(
+        (status = 200, description = "User profile retrieved successfully", body = UserProfileResponse),
+        (status = 404, description = "User not found"),
+        (status = 401, description = "Unauthorized"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "users",
+    security(
+        ("jwt_auth" = [])
+    )
+)]
 #[get("/profile")]
 pub async fn get_profile(
     user_service: web::Data<UserService>,

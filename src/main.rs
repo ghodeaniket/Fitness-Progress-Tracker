@@ -8,11 +8,13 @@ mod utils;
 use actix_web::{web, App, HttpServer, Responder, HttpResponse, get, middleware::Logger};
 use log::{info, error};
 use std::process::exit;
+use utoipa_swagger_ui::SwaggerUi;
 
 use crate::api::middleware::JwtAuth;
 use crate::config::AppConfig;
 use crate::db::init_db;
 use crate::services::{UserService, WorkoutService};
+use crate::api::docs::ApiDoc;
 
 #[get("/health")]
 async fn health_check() -> impl Responder {
@@ -63,6 +65,9 @@ async fn main() -> std::io::Result<()> {
     // Create JWT middleware
     let jwt_middleware = JwtAuth::new(config.jwt_secret.clone());
     
+    // Create the OpenAPI document
+    let openapi = ApiDoc::openapi();
+    
     // Start HTTP server
     info!("Starting server at {}", config.server_addr());
     HttpServer::new(move || {
@@ -76,6 +81,11 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(workout_service.clone()))
             // Register the health check endpoint
             .service(health_check)
+            // Serve Swagger UI
+            .service(
+                SwaggerUi::new("/swagger-ui/{_:.*}")
+                    .url("/api-docs/openapi.json", openapi.clone())
+            )
             // Register public API routes
             .service(
                 web::scope("/api/v1")

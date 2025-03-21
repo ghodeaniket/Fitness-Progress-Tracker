@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# Fitness-Progress-Tracker
-The Fitness Progress Tracker backend API, built with Rust, will provide secure, efficient, and reliable services for the mobile app. It will handle data storage, authentication, and analytics processing.
-=======
 # Fitness Progress Tracker - Backend API
 
 A secure, efficient, and reliable backend API for the Fitness Progress Tracker mobile app, built with Rust.
@@ -49,6 +45,29 @@ cargo run
 
 The API will be available at `http://localhost:8080`.
 
+### Using Docker Compose
+
+For a quick setup with Docker:
+
+```bash
+docker-compose up -d
+```
+
+This will start both the API server and a PostgreSQL database with the correct schema.
+
+## API Documentation with Swagger UI
+
+The API comes with built-in Swagger UI documentation, making it easy to explore and test endpoints.
+
+- Access Swagger UI: `http://localhost:8080/swagger-ui/`
+- OpenAPI JSON: `http://localhost:8080/api-docs/openapi.json`
+
+You can use Swagger UI to:
+- Explore all available endpoints
+- Test API calls directly from the browser
+- See request/response formats
+- Authenticate with JWT tokens
+
 ## Project Structure
 
 ```
@@ -83,9 +102,31 @@ For newcomers to Rust, we recommend checking out:
 3. **Phase 3** - Social features and gamification
 4. **Phase 4** - Machine learning for workout recommendations
 
-## API Documentation
+## Testing
 
-API documentation is available at `/api/docs` when the server is running.
+### Automated Tests
+
+Run the test suite with:
+```bash
+cargo test
+```
+
+### Local Testing with Swagger UI
+
+The most convenient way to test the API locally is through the Swagger UI interface at `http://localhost:8080/swagger-ui/`.
+
+1. First register a user through the `/api/v1/auth/register` endpoint
+2. Log in with the user credentials at `/api/v1/auth/login` to get a JWT token
+3. Click the "Authorize" button at the top of the Swagger UI and enter your token (`Bearer your_token_here`)
+4. Now you can access protected endpoints like creating workouts or viewing user profiles
+
+## Continuous Integration
+
+This project uses GitHub Actions for CI, which automatically:
+- Builds the project
+- Runs all tests
+- Checks code formatting and linting
+- Performs security audits
 
 ## Contributing
 
@@ -94,4 +135,3 @@ Contributions are welcome! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) f
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
->>>>>>> e68a73d (Initial commit: MVP project structure)

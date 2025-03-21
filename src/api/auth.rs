@@ -2,8 +2,23 @@ use crate::models::{UserRegisterRequest, UserLoginRequest};
 use crate::services::UserService;
 use actix_web::{web, HttpResponse, Responder, post};
 use validator::Validate;
+use utoipa::OpenApi;
 
 /// Register a new user
+///
+/// Register a new user with email, username, and password
+#[utoipa::path(
+    post,
+    path = "/auth/register",
+    request_body = UserRegisterRequest,
+    responses(
+        (status = 201, description = "User successfully registered", body = UserProfileResponse),
+        (status = 400, description = "Invalid request data"),
+        (status = 409, description = "User with this email already exists"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "auth"
+)]
 #[post("/register")]
 pub async fn register(
     user_service: web::Data<UserService>,
@@ -33,6 +48,19 @@ pub async fn register(
 }
 
 /// Login a user
+///
+/// Authenticate a user with email and password
+#[utoipa::path(
+    post,
+    path = "/auth/login",
+    request_body = UserLoginRequest,
+    responses(
+        (status = 200, description = "Login successful", body = LoginResponse),
+        (status = 401, description = "Invalid credentials"),
+        (status = 500, description = "Internal server error")
+    ),
+    tag = "auth"
+)]
 #[post("/login")]
 pub async fn login(
     user_service: web::Data<UserService>,
@@ -57,4 +85,11 @@ pub async fn login(
             }))
         }
     }
+}
+
+// Define a new type for login response for Swagger documentation
+#[derive(serde::Serialize, utoipa::ToSchema)]
+pub struct LoginResponse {
+    user: crate::models::UserProfileResponse,
+    token: String,
 }
