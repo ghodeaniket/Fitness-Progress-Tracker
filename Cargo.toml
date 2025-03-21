@@ -44,8 +44,10 @@ config = "0.13.3"
 utoipa = { version = "4.0.0", features = ["actix_extras", "chrono", "uuid"] }
 utoipa-swagger-ui = { version = "4.0.0", features = ["actix-web"] }
 
-# Pin zerofrom to a version compatible with Rust 1.75.0
+# Pin dependencies to versions compatible with Rust 1.75.0/1.79.0
 zerofrom = "=0.1.5"
+home = "=0.5.10"
+litemap = "=0.7.1"
 
 [dev-dependencies]
 # Testing
