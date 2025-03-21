@@ -50,7 +50,7 @@ pub struct JwtAuthMiddleware<S> {
 
 impl<S, B> Service<ServiceRequest> for JwtAuthMiddleware<S>
 where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + Clone,
     S::Future: 'static,
     B: 'static,
 {
